@@ -1,0 +1,11 @@
+[2021/10/27 14:25:56] root INFO: loss_backward_0: 
+[2021/10/27 14:25:56] root INFO: 	mean diff: check passed: True, value: 4.76837158203125e-07
+[2021/10/27 14:25:56] root INFO: loss_backward_1: 
+[2021/10/27 14:25:56] root INFO: 	mean diff: check passed: True, value: 2.384185791015625e-07
+[2021/10/27 14:25:56] root INFO: loss_backward_2: 
+[2021/10/27 14:25:56] root INFO: 	mean diff: check passed: True, value: 3.2186508178710938e-06
+[2021/10/27 14:25:56] root INFO: loss_backward_3: 
+[2021/10/27 14:25:56] root INFO: 	mean diff: check passed: False, value: 6.195902824401855e-05
+[2021/10/27 14:25:56] root INFO: loss_backward_4: 
+[2021/10/27 14:25:56] root INFO: 	mean diff: check passed: True, value: 1.734723475976807e-18
+[2021/10/27 14:25:56] root INFO: diff check failed
