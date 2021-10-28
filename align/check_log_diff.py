@@ -5,18 +5,18 @@ if __name__ == "__main__":
     diff_helper = ReprodDiffHelper()
 
     # forward
-    # f0d = diff_helper.load_info("./forward/forward0_paddle.npy")
-    # f0t = diff_helper.load_info("./forward/forward0_torch.npy")
-    # f1d = diff_helper.load_info("./forward/forward1_paddle.npy")
-    # f1t = diff_helper.load_info("./forward/forward1_torch.npy")
-    # f2d = diff_helper.load_info("./forward/forward2_paddle.npy")
-    # f2t = diff_helper.load_info("./forward/forward2_torch.npy")
-    # f3d = diff_helper.load_info("./forward/forward3_paddle.npy")
-    # f3t = diff_helper.load_info("./forward/forward3_torch.npy")
-    #
-    # diff_helper.compare_info(f3d, f3t)
-    # diff_helper.report(
-    #     diff_method="mean", diff_threshold=1e-6, path="./forward_diff.txt")
+    f0d = diff_helper.load_info("./forward/forward0_paddle.npy")
+    f0t = diff_helper.load_info("./forward/forward0_torch.npy")
+    f1d = diff_helper.load_info("./forward/forward1_paddle.npy")
+    f1t = diff_helper.load_info("./forward/forward1_torch.npy")
+    f2d = diff_helper.load_info("./forward/forward2_paddle.npy")
+    f2t = diff_helper.load_info("./forward/forward2_torch.npy")
+    f3d = diff_helper.load_info("./forward/forward3_paddle.npy")
+    f3t = diff_helper.load_info("./forward/forward3_torch.npy")
+
+    diff_helper.compare_info(f3d, f3t)
+    diff_helper.report(
+        diff_method="mean", diff_threshold=1e-6, path="./forward_diff.txt")
 
 
     # backward
@@ -49,3 +49,10 @@ if __name__ == "__main__":
     diff_helper.compare_info(s4d, s4t)
     diff_helper.report(
         diff_method="mean", diff_threshold=1e-5, path="./loss_backward_diff.txt")
+
+    # metric
+    metricd = diff_helper.load_info("./metric/metric_paddle.npy")
+    metrict = diff_helper.load_info("./metric/metric_torch.npy")
+    diff_helper.compare_info(metricd, metrict)
+    diff_helper.report(
+        diff_method="mean", diff_threshold=1e-5, path="./metric_diff.txt")

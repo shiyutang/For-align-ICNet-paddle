@@ -30,12 +30,12 @@ class Trainer(object):
         self.train_dataloader = DataLoader(dataset=train_dataset,
                                            batch_size=cfg["train"]["train_batch_size"],
                                            shuffle=True,
-                                           num_workers=8,
+                                           num_workers=4,
                                            drop_last=False)
         self.val_dataloader = DataLoader(dataset=val_dataset,
                                          batch_size=cfg["train"]["valid_batch_size"],
                                          shuffle=False,
-                                         num_workers=8,
+                                         num_workers=4,
                                          drop_last=False)
 
         self.iters_per_epoch = len(self.train_dataloader)
@@ -49,18 +49,15 @@ class Trainer(object):
         params_list = list()
 
         if hasattr(self.model, 'pretrained'):
-            params_list = ({'params': self.model.pretrained.parameters(), 'lr': cfg["optimizer"]["init_lr"]}['params'])
+            params_list.append({'params': self.model.pretrained.parameters(), 'lr': cfg["optimizer"]["init_lr"]})
+            print('lr*1')
         if hasattr(self.model, 'exclusive'):
             for module in self.model.exclusive:
-                params_list = (
-                {'params': getattr(self.model, module).parameters(), 'lr': cfg["optimizer"]["init_lr"] * 10}['params'])
-        # print(params_list[0])
+                params_list.append(
+                    {'params': getattr(self.model, module).parameters(), 'lr': cfg["optimizer"]["init_lr"] * 10})
+                print("lr*10")
 
-        # lr scheduler
-        # self.lr_scheduler = IterationPolyLR(optimizer = self.optimizer,
-        #                                     max_iters=self.max_iters,
-        #                                     power=0.9)
-        print(self.max_iters)
+        # params_list = self.model.pretrained.parameters().append({'learning_rate': cfg["optimizer"]["init_lr"]})
         self.lr_scheduler = paddle.optimizer.lr.PolynomialDecay(
             learning_rate=cfg["optimizer"]["init_lr"],
             decay_steps=self.max_iters,
@@ -68,16 +65,12 @@ class Trainer(object):
             power=0.9,
             cycle=True
         )
+
         self.optimizer = paddle.optimizer.Momentum(parameters=params_list,
                                                    learning_rate=self.lr_scheduler,
                                                    momentum=cfg["optimizer"]["momentum"],
                                                    weight_decay=cfg["optimizer"]["weight_decay"])
-        # self.optimizer = torch.optim.SGD(params = self.model.parameters(),
-        #                                  lr = cfg["optimizer"]["init_lr"],
-        #                                  momentum=cfg["optimizer"]["momentum"],
-        #                                  weight_decay=cfg["optimizer"]["weight_decay"])
 
-        # dataparallel
         # dist.init_parallel_env()
         if (self.dataparallel):
             self.model = paddle.DataParallel(self.model)
@@ -113,28 +106,22 @@ class Trainer(object):
                 self.current_iteration += 1
                 self.lr_scheduler.step()
                 outputs = self.model(images)
-                # print(targets.shape) #(7,960,960)
                 loss = self.criterion(outputs, targets)
                 self.metric.update(outputs[0], targets)
                 pixAcc, mIoU = self.metric.get()
                 lsit_pixAcc.append(pixAcc)
                 list_mIoU.append(mIoU.item())
                 list_loss.append(loss.item())
+
+                self.optimizer.clear_grad()
                 loss.backward()
                 self.optimizer.step()
-                self.optimizer.clear_grad()
-                self.lr_scheduler.step()
 
                 eta_seconds = ((time.time() - start_time) / self.current_iteration) * (
                             max_iters - self.current_iteration)
                 eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
 
                 if self.current_iteration % log_per_iters == 0:
-                    # print(self.current_epoch, self.epochs,
-                    #         self.current_iteration, max_iters,
-                    #         self.optimizer.get_lr,
-                    #         loss.item(),
-                    #         mIoU,)
                     logger.info(
                         "Epochs: {}/{} || Iters: {}/{} || Lr: {} || Loss: {} || mIoU: {} || Cost Time: {} || Estimated Time: {}".format(
                             self.current_epoch, self.epochs,
@@ -222,16 +209,10 @@ if __name__ == '__main__':
     config_path = "./configs/icnet.yaml"
     with open(config_path, "r") as yaml_file:
         cfg = yaml.full_load(yaml_file.read())
-        # print(cfg)
-        # print(cfg["model"]["backbone"])
-        # print(cfg["train"]["specific_gpu_num"])
 
     # Use specific GPU
     os.environ["CUDA_VISIBLE_DEVICES"] = str(cfg["train"]["specific_gpu_num"])
     num_gpus = len(cfg["train"]["specific_gpu_num"].split(','))
-    # print("torch.cuda.is_available(): {}".format(torch.cuda.is_available()))
-    # print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
-    # print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
 
     # Set logger
     logger = SetupLogger(name="semantic_segmentation",
@@ -239,9 +220,6 @@ if __name__ == '__main__':
                          distributed_rank=0,
                          filename='{}_{}_log.txt'.format(cfg["model"]["name"], cfg["model"]["backbone"]))
     logger.info("Using {} GPUs".format(num_gpus))
-    # logger.info("torch.cuda.is_available(): {}".format(torch.cuda.is_available()))
-    # logger.info("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
-    # logger.info("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
     logger.info(cfg)
 
     # Start train

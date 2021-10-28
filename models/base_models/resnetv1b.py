@@ -1,15 +1,8 @@
 import paddle
 import paddle.nn as nn
 from paddle.vision.models import resnet50
-__all__ = ['ResNetV1b', 'resnet50_v1b', 'resnet50_v1s']
 
-model_urls = {
-    'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
-    'resnet34': 'https://download.pytorch.org/models/resnet34-333f7ec4.pth',
-    'resnet50': 'https://download.pytorch.org/models/resnet50-19c8e357.pth',
-    'resnet101': 'https://download.pytorch.org/models/resnet101-5d3b4d8f.pth',
-    'resnet152': 'https://download.pytorch.org/models/resnet152-b121ed2d.pth',
-}
+__all__ = ['ResNetV1b', 'resnet50_v1b']
 
 
 class BasicBlockV1b(nn.Layer):
@@ -18,7 +11,7 @@ class BasicBlockV1b(nn.Layer):
     def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None,
                  previous_dilation=1, norm_layer=nn.BatchNorm2D):
         super(BasicBlockV1b, self).__init__()
-        self.bn_weight = paddle.framework.ParamAttr(initializer=paddle.nn.initializer.Constant(0))
+        # self.bn_weight = paddle.framework.ParamAttr(initializer=paddle.nn.initializer.Constant(0))
         self.conv1 = nn.Conv2D(inplanes, planes, 3, stride,
                                dilation, dilation, bias_attr=False)
         # self.bn1 = nn.BatchNorm2D(planes)
@@ -27,7 +20,8 @@ class BasicBlockV1b(nn.Layer):
         self.conv2 = nn.Conv2D(planes, planes, 3, 1, previous_dilation,
                                dilation=previous_dilation, bias_attr=False)
         # self.bn2 = nn.BatchNorm2D(planes)
-        self.bn2 = norm_layer(planes)
+        # self.bn2 = norm_layer(planes)
+        self.bn2 = norm_layer(planes)#, weight_attr = self.bn_weight)
         self.downsample = downsample
         self.stride = stride
 
@@ -56,20 +50,20 @@ class BottleneckV1b(nn.Layer):
     def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None,
                  previous_dilation=1, norm_layer=nn.BatchNorm2D):
         super(BottleneckV1b, self).__init__()
-        self.con2d_weight = paddle.framework.ParamAttr(initializer=paddle.nn.initializer.KaimingNormal())
-        self.bn_weight = paddle.framework.ParamAttr(initializer=paddle.nn.initializer.Constant(0))
+        # self.con2d_weight = paddle.framework.ParamAttr(initializer=paddle.nn.initializer.KaimingNormal())
+        # self.bn_weight = paddle.framework.ParamAttr(initializer=paddle.nn.initializer.Constant(0))
 
-        self.conv1 = nn.Conv2D(inplanes, planes, 1, bias_attr=False, weight_attr=self.con2d_weight)
+        self.conv1 = nn.Conv2D(inplanes, planes, 1, bias_attr=False)#, weight_attr=self.con2d_weight)
         # self.bn1 = nn.BatchNorm2D(planes)
         self.bn1 = norm_layer(planes)
         self.conv2 = nn.Conv2D(planes, planes, 3, stride,
-                               dilation, dilation, bias_attr=False, weight_attr=self.con2d_weight)
+                               dilation, dilation, bias_attr=False)#, weight_attr=self.con2d_weight)
         # self.bn2 = nn.BatchNorm2D(planes)
         self.bn2 = norm_layer(planes)
         self.conv3 = nn.Conv2D(planes, planes * self.expansion, 1, bias_attr=False)#, weight_attr=self.con2d_weight)
-        # self.bn3 = nn.BatchNorm2D(planes * self.expansion, bias_attr=None)
+        self.bn3 = nn.BatchNorm2D(planes * self.expansion, bias_attr=None)
         self.bn3 = norm_layer(planes * self.expansion, bias_attr=None)#, weight_attr=self.bn_weight)
-        self.relu = nn.ReLU()
+        self.relu = nn.ReLU(True)
         self.downsample = downsample
         self.stride = stride
 
@@ -108,17 +102,17 @@ class ResNetV1b(nn.Layer):
         if deep_stem:
             self.conv1 = nn.Sequential(
                 nn.Conv2D(3, 64, 3, 2, 1, bias_attr=False, weight_attr=self.con2d_weight),
-                norm_layer(64),
-                nn.ReLU(),
+                norm_layer(64, bias_attr=self.bn_bias, weight_attr=self.bn_weight),
+                nn.ReLU(True),
                 nn.Conv2D(64, 64, 3, 1, 1, bias_attr=False, weight_attr=self.con2d_weight),
-                norm_layer(64),
-                nn.ReLU(),
+                norm_layer(64, bias_attr=self.bn_bias, weight_attr=self.bn_weight),
+                nn.ReLU(True),
                 nn.Conv2D(64, 128, 3, 1, 1, bias_attr=False, weight_attr=self.con2d_weight)
             )
         else:
             self.conv1 = nn.Conv2D(3, 64, 7, 2, 3, bias_attr=False, weight_attr=self.con2d_weight)
         self.bn1 = norm_layer(self.inplanes, bias_attr=self.bn_bias, weight_attr=self.bn_weight)
-        self.relu = nn.ReLU()
+        self.relu = nn.ReLU(True)
         self.maxpool = nn.MaxPool2D(3, 2, 1)
         self.layer1 = self._make_layer(block, 64, layers[0], norm_layer=norm_layer)
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2, norm_layer=norm_layer)
@@ -130,8 +124,9 @@ class ResNetV1b(nn.Layer):
             self.layer4 = self._make_layer(block, 512, layers[3], stride=2, norm_layer=norm_layer)
         self.avgpool = nn.AdaptiveAvgPool2D((1, 1))
         self.fc = nn.Linear(512 * block.expansion, num_classes)
-
+        print(zero_init_residual)
         # if zero_init_residual:
+
         #     for m in self.modules():
         #         if isinstance(m, BottleneckV1b):
         #             m.bn3.weight = paddle.framework.ParamAttr(
@@ -146,8 +141,8 @@ class ResNetV1b(nn.Layer):
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
-                nn.Conv2D(self.inplanes, planes * block.expansion, 1, stride, bias_attr=False),
-                norm_layer(planes * block.expansion),
+                nn.Conv2D(self.inplanes, planes * block.expansion, 1, stride, bias_attr=False, weight_attr=self.con2d_weight),
+                norm_layer(planes * block.expansion, bias_attr=self.bn_bias, weight_attr=self.bn_weight)
             )
 
         layers = []
@@ -186,32 +181,11 @@ class ResNetV1b(nn.Layer):
 
 def resnet50_v1b(pretrained=False, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], **kwargs)
-    model_file = 'res50_paddle.pdparams'
-    model.load_dict(paddle.load(model_file))
-    print(111)
-    # if pretrained:
-    #     model_old = resnet50(pretrained=pretrained)
-    #     old_dict = model_old.state_dict()
-    #     model_dict = model.state_dict()
-    #     old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
-    #     model_dict.update(old_dict)
-    #     model.load_dict(model_dict)
-    # if pretrained:
-    #     old_dict = model_zoo.load_url(model_urls['resnet50'])
-    #     model_dict = model.state_dict()
-    #     old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
-    #     model_dict.update(old_dict)
-    #     model.load_state_dict(model_dict)
-    # paddle.save(model.state_dict(),'res50_paddle.pdparams')
+    if pretrained:
+    #   model = resnet50(pretrained=pretrained)
+        model_file = 'res50_paddle_from_torch.pdparams'
+        model.load_dict(paddle.load(model_file))
     return model
-
-# def resnet50_v1s(pretrained=True, root='~/.torch/models', **kwargs):
-#
-#     model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], deep_stem=True, **kwargs)
-#     if pretrained:
-#         from ..model_store import get_resnet_file
-#         model.load_state_dict(paddle.load(get_resnet_file('resnet50', root=root)), strict=False)
-#     return model
 
 
 if __name__ == '__main__':
@@ -220,5 +194,5 @@ if __name__ == '__main__':
     # x = paddle.randn([batch, 3, 224, 224])
     x = paddle.to_tensor(x)
     model = resnet50_v1b(True)
-    output = model(x)
-    print(output)
+    # for p in model.parameters():
+    #     print(p)

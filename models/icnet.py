@@ -89,7 +89,6 @@ class _ICHead(nn.Layer):
         return outputs
 
 
-# padding卷积里的padding=1对应于torch卷积里padding=2?
 class _ConvBNReLU(nn.Layer):
     def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1, dilation=1,
                  groups=1, norm_layer=nn.BatchNorm2D, bias=False, **kwargs):
@@ -174,26 +173,22 @@ if __name__ == '__main__':
     import paddle
     import numpy as np
     from reprod_log import ReprodLogger
-    # # To pdparams
-    # img = np.load('fake_data.npy', allow_pickle=True)
-    # img = paddle.to_tensor(img)
-    # model = ICNet()
-    # outputs = model(img)
-    # print(outputs[3])
-    # paddle.save(model.state_dict(), 'paddle_model_init.pdparams')
+
+    reprod_logger = ReprodLogger()
+    model = ICNet(nclass=19, backbone='resnet50')
+
+    #  To pdparams
 
     # Align
-    #
-    reprod_logger = ReprodLogger()
-    model = ICNet()
-    model_file = 'paddle_from_torch.pdparams'
-    model.load_dict(paddle.load(model_file))
-    model.eval()
-    fake_data = np.load('fake_data.npy', allow_pickle=True)
-    fake_label = np.load('fake_label.npy', allow_pickle=True)
-    input = paddle.to_tensor(fake_data)
-    label = paddle.to_tensor(fake_label)
-    criterion = ICNetLoss(ignore_index=-1)
+
+    # model_file = 'paddle_from_torch.pdparams'
+    # model.load_dict(paddle.load(model_file))
+    # model.eval()
+    # fake_data = np.load('fake_data.npy', allow_pickle=True)
+    # fake_label = np.load('fake_label.npy', allow_pickle=True)
+    # input = paddle.to_tensor(fake_data)
+    # label = paddle.to_tensor(fake_label)
+    # criterion = ICNetLoss(ignore_index=-1)
 
     # forward
     # output = model(input)
@@ -208,44 +203,34 @@ if __name__ == '__main__':
     # reprod_logger.save("loss_paddle.npy")
 
     # lr
-    max_iters = 5
-    model.pretrained.parameters().append({'learning_rate': 0.01})
-    lr_scheduler = paddle.optimizer.lr.PolynomialDecay(
-        learning_rate=0.01,
-        decay_steps=30000,
-        end_lr=0.0,
-        power=0.9,
-        cycle=False
-    )
-    optimizer = paddle.optimizer.Momentum(parameters= model.pretrained.parameters(),
-                                               learning_rate=lr_scheduler,
-                                               momentum=0.9,
-                                               weight_decay=0.0001)
-    loss_list, lr_list = train_some_iters(model,
-                      lr_scheduler,
-                     criterion,
-                     optimizer,
-                     fake_data,
-                     fake_label,
-                     max_iter=max_iters)
+    # max_iters = 5
+    # model.pretrained.parameters().append({'learning_rate': 0.01})
+    # lr_scheduler = paddle.optimizer.lr.PolynomialDecay(
+    #     learning_rate=0.01,
+    #     decay_steps=30000,
+    #     end_lr=0.0,
+    #     power=0.9,
+    #     cycle=False
+    # )
+    # optimizer = paddle.optimizer.Momentum(parameters= model.pretrained.parameters(),
+    #                                            learning_rate=lr_scheduler,
+    #                                            momentum=0.9,
+    #                                            weight_decay=0.0001)
+    # loss_list, lr_list = train_some_iters(model,
+    #                   lr_scheduler,
+    #                  criterion,
+    #                  optimizer,
+    #                  fake_data,
+    #                  fake_label,
+    #                  max_iter=max_iters)
+
     # backward
-    for i in range(max_iters):
-        print(loss_list[i].item())
-    for i in range(max_iters):
-        reprod_logger.add("loss_backward_{}".format(i), np.array(loss_list[i].item()))
-        reprod_logger.save("loss_backward_{}_paddle.npy".format(i))
-    # lr
-    for i in range(max_iters):
-        reprod_logger.add("lr_backward_{}".format(i), np.array(lr_list[i]))
-        reprod_logger.save("lr_backward_{}_paddle.npy".format(i))
-
-    # Test
-    # inputs = paddle.randn([1, 3, 720, 720])
-    # with paddle.no_grad():
-    #     outputs = model(inputs)
-    # print(len(outputs))		 # 3
-    # print(outputs[0].shape) # torch.Size([1, 19, 200, 200])
-    # print(outputs[1].shape)# torch.Size([1, 19, 100, 100])
-    # print(outputs[2].shape) # torch.Size([1, 19, 50, 50])
-    # print(outputs[3].shape) # torch.Size([1, 19, 50, 50])
-
+    # for i in range(max_iters):
+    #     print(loss_list[i].item())
+    # for i in range(max_iters):
+    #     reprod_logger.add("loss_backward_{}".format(i), np.array(loss_list[i].item()))
+    #     reprod_logger.save("loss_backward_{}_paddle.npy".format(i))
+    # # lr
+    # for i in range(max_iters):
+    #     reprod_logger.add("lr_backward_{}".format(i), np.array(lr_list[i]))
+    #     reprod_logger.save("lr_backward_{}_paddle.npy".format(i))

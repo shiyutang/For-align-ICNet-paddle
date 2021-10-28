@@ -1,9 +1,16 @@
 """Evaluation Metrics for Semantic Segmentation"""
 import paddle
 import numpy as np
-from .sum_count import sum_count
+
+from icnet import ICNet
 __all__ = ['SegmentationMetric', 'batch_pix_accuracy', 'batch_intersection_union',
            'pixelAccuracy', 'intersectionAndUnion', 'hist_info', 'compute_score']
+
+
+def sum_count(bool_tensor):
+    # print(bool_tensor.dtype)
+    assert bool_tensor.dtype == paddle.bool
+    return paddle.fluid.layers.where(bool_tensor).shape[0]
 
 
 class SegmentationMetric(object):
@@ -27,7 +34,7 @@ class SegmentationMetric(object):
         """
 
         def evaluate_worker(self, pred, label):
-            
+
             correct, labeled = batch_pix_accuracy(pred, label)
             inter, union = batch_intersection_union(pred, label, self.nclass)
 
@@ -44,7 +51,7 @@ class SegmentationMetric(object):
         elif isinstance(preds, (list, tuple)):
             for (pred, label) in zip(preds, labels):
                 evaluate_worker(self, pred, label)
-        
+
     def get(self):
         """Gets the current evaluation result.
 
@@ -66,12 +73,14 @@ class SegmentationMetric(object):
         self.total_label = 0
 
 
-# paddle version
+# pytorch version
 def batch_pix_accuracy(output, target):
     """PixAcc"""
     # inputs are numpy array, output 4D, target 3D
     predict = paddle.argmax(output.astype('long'), 1) + 1
     target = target.astype('long') + 1
+    pixel_labeled = paddle.sum(target)
+    # try:
     pixel_labeled = sum_count(target > 0)
     # try:
     #     pixel_correct = sum_count(paddle.logical_and((predict == target) * (target > 0)))
@@ -80,7 +89,7 @@ def batch_pix_accuracy(output, target):
     # assert pixel_correct < pixel_labeled, "Correct area should be smaller than Labeled"
     pixel_correct = sum_count(paddle.logical_and((predict == target),(target > 0)))
     return pixel_correct, pixel_labeled
-    
+
 
 def batch_intersection_union(output, target, nclass):
     """mIoU"""
@@ -89,7 +98,7 @@ def batch_intersection_union(output, target, nclass):
     maxi = nclass
     nbins = nclass
     predict = paddle.argmax(output, 1) + 1  # [N,H,W]
-    target = target.astype('float32') + 1            # [N,H,W] 
+    target = target.astype('float32') + 1            # [N,H,W]
 
     predict = predict.astype('float32') * (target > 0).astype('float32')
     intersection = predict * (predict == target).astype('float32')
@@ -163,3 +172,32 @@ def compute_score(hist, correct, labeled):
     mean_pixel_acc = correct / labeled
 
     return iu, mean_IU, mean_IU_no_back, mean_pixel_acc
+
+
+
+if __name__ == '__main__':
+    import numpy as np
+    import paddle
+    from reprod_log import ReprodLogger
+
+    # Align
+    reprod_logger = ReprodLogger()
+    model = ICNet()
+    model_file = 'paddle_from_torch.pdparams'
+    model.load_dict((paddle.load(model_file)))
+    model.eval()
+    fake_data = np.load('../models/fake_data.npy', allow_pickle=True)
+    fake_label = np.load('../models/fake_label.npy', allow_pickle=True)
+
+    input = paddle.to_tensor(fake_data)
+    label = paddle.to_tensor(fake_label)
+    outputs = model(input)
+    metric = SegmentationMetric(3)
+    metric.update(outputs[0], label)
+    pixAcc, mIoU = metric.get()
+    print(pixAcc)
+    print(mIoU)
+
+    print(np.array([mIoU.item()]))
+    reprod_logger.add("mIoU", np.array([mIoU.item()]))
+    reprod_logger.save("metric_paddle.npy")
