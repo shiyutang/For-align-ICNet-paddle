@@ -1,0 +1,11 @@
+[2021/10/29 18:48:08] root INFO: lr2_backward_0: 
+[2021/10/29 18:48:08] root INFO: 	mean diff: check passed: True, value: 0.0
+[2021/10/29 18:48:08] root INFO: lr2_backward_1: 
+[2021/10/29 18:48:08] root INFO: 	mean diff: check passed: True, value: 0.0
+[2021/10/29 18:48:08] root INFO: lr2_backward_2: 
+[2021/10/29 18:48:08] root INFO: 	mean diff: check passed: True, value: 0.0
+[2021/10/29 18:48:08] root INFO: lr2_backward_3: 
+[2021/10/29 18:48:08] root INFO: 	mean diff: check passed: True, value: 0.0
+[2021/10/29 18:48:08] root INFO: lr2_backward_4: 
+[2021/10/29 18:48:08] root INFO: 	mean diff: check passed: True, value: 0.0
+[2021/10/29 18:48:08] root INFO: diff check passed

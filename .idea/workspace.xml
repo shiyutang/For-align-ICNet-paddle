@@ -2,26 +2,49 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="79895bac-e90c-42f2-81c6-8d0427d37bcd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/metric.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/backward.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/backward_diff.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/backward_paddle.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_0_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_0_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_1_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_1_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_2_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_2_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_3_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_3_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_4_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/loss_backward_4_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_0_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_0_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_1_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_1_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_2_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_2_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_3_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_3_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_4_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/backward/lr_backward_4_torch.npy" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/align/check_log_diff.py" beforeDir="false" afterPath="$PROJECT_DIR$/align/check_log_diff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/fake_data.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/fake_label.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/forward_npy.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/loss_backward_diff.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/loss_pd.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/align/lr_backward_diff.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckpt/icnet_resnet50_log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ckpt/icnet_resnet50_log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/base_models/resnetv1b.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/base_models/resnetv1b.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/diff_txt/forward_diff.txt" beforeDir="false" afterPath="$PROJECT_DIR$/align/diff_txt/forward_diff.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/diff_txt/loss_backward_diff.txt" beforeDir="false" afterPath="$PROJECT_DIR$/align/diff_txt/loss_backward_diff.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/fake_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/align/fake_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward0_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward0_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward1_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward1_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward2_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward2_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward3_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/forward3_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/loss_forward_paddle.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/align/forward/loss_forward_torch.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/cityscapes.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/cityscapes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/base_models/fake_data_r18.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/base_models/fake_label_r18.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/fake_data.npy" beforeDir="false" afterPath="$PROJECT_DIR$/models/fake_data.npy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/fake_label.npy" beforeDir="false" afterPath="$PROJECT_DIR$/models/fake_label.npy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/icnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/icnet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/metric.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/metric.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/metric.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/metric.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.train">
+  <component name="RunManager" selected="Python.check_log_diff">
     <configuration name="check_log_diff" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ICNet-paddle" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -72,6 +95,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/align/check_log_diff.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="fake_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ICNet-paddle" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/align" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/align/fake_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -102,7 +147,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="resnetv1b" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="metric" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ICNet-paddle" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -110,34 +155,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models/base_models" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/base_models/resnetv1b.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="ICNet-paddle" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../.." />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/metric.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -170,11 +193,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train" />
-        <item itemvalue="Python.test" />
-        <item itemvalue="Python.resnetv1b" />
-        <item itemvalue="Python.icnet" />
         <item itemvalue="Python.check_log_diff" />
+        <item itemvalue="Python.icnet" />
+        <item itemvalue="Python.fake_data" />
+        <item itemvalue="Python.metric" />
+        <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
   </component>
@@ -199,7 +222,10 @@
       <workItem from="1635334594749" duration="2000" />
       <workItem from="1635385904137" duration="6587000" />
       <workItem from="1635403356975" duration="584000" />
-      <workItem from="1635415848821" duration="1314000" />
+      <workItem from="1635415848821" duration="1567000" />
+      <workItem from="1635437714117" duration="664000" />
+      <workItem from="1635482370646" duration="2568000" />
+      <workItem from="1635490483451" duration="10435000" />
     </task>
     <servers />
   </component>
@@ -224,11 +250,11 @@
     <SUITE FILE_PATH="coverage/ICNet_paddle$segbase.coverage" NAME="segbase Coverage Results" MODIFIED="1635220699187" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/ICNet_paddle$train.coverage" NAME="train Coverage Results" MODIFIED="1635393750788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ICNet_paddle$resnetv1b.coverage" NAME="resnetv1b Coverage Results" MODIFIED="1635389571645" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models/base_models" />
-    <SUITE FILE_PATH="coverage/ICNet_paddle$fake_data.coverage" NAME="fake_data Coverage Results" MODIFIED="1635297006783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/align" />
-    <SUITE FILE_PATH="coverage/ICNet_paddle$check_log_diff.coverage" NAME="check_log_diff Coverage Results" MODIFIED="1635320653943" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/align" />
-    <SUITE FILE_PATH="coverage/ICNet_paddle$icnet.coverage" NAME="icnet Coverage Results" MODIFIED="1635387693063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
+    <SUITE FILE_PATH="coverage/ICNet_paddle$fake_data.coverage" NAME="fake_data Coverage Results" MODIFIED="1635490944487" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/align" />
+    <SUITE FILE_PATH="coverage/ICNet_paddle$icnet.coverage" NAME="icnet Coverage Results" MODIFIED="1635498479657" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
+    <SUITE FILE_PATH="coverage/ICNet_paddle$check_log_diff.coverage" NAME="check_log_diff Coverage Results" MODIFIED="1635504601225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/align" />
     <SUITE FILE_PATH="coverage/ICNet_paddle$match_weight_name.coverage" NAME="match_weight_name Coverage Results" MODIFIED="1635212948536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../RAN/RAN-paddle&amp;torch/Residual-Attention-Network/tools" />
-    <SUITE FILE_PATH="coverage/ICNet_paddle$metric.coverage" NAME="metric Coverage Results" MODIFIED="1635320621608" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
     <SUITE FILE_PATH="coverage/ICNet_paddle$test.coverage" NAME="test Coverage Results" MODIFIED="1635393727762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../.." />
+    <SUITE FILE_PATH="coverage/ICNet_paddle$metric.coverage" NAME="metric Coverage Results" MODIFIED="1635489983819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models" />
   </component>
 </project>

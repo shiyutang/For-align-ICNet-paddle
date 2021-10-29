@@ -28,13 +28,13 @@ Python 3.7 or later with the following `pip3 install -r requirements.txt`:
 
 |image|predict|
 |:---:|:---:|
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/frankfurt_000001_057181_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/frankfurt_000001_057181_leftImg8bit_mIoU_0.727.png)|
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/lindau_000005_000019_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/lindau_000005_000019_leftImg8bit_mIoU_0.705.png) |
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000061_000019_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000061_000019_leftImg8bit_mIoU_0.704.png) |
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000121_000019_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000121_000019_leftImg8bit_mIoU_0.694.png) |
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000124_000019_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000124_000019_leftImg8bit_mIoU_0.696.png) |
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000150_000019_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000150_000019_leftImg8bit_mIoU_0.696.png) |
-|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000158_000019_leftImg8bit_src.png)|![](/Users/liangshihao01/Desktop/ICNet/ICNet-paddle/demo/munster_000158_000019_leftImg8bit_mIoU_0.692.png) |
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/frankfurt_000001_057181_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/frankfurt_000001_057181_leftImg8bit_mIoU_0.727.png)|
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/lindau_000005_000019_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/lindau_000005_000019_leftImg8bit_mIoU_0.705.png) |
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000061_000019_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000061_000019_leftImg8bit_mIoU_0.704.png) |
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000121_000019_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000121_000019_leftImg8bit_mIoU_0.694.png) |
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000124_000019_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000124_000019_leftImg8bit_mIoU_0.696.png) |
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000150_000019_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000150_000019_leftImg8bit_mIoU_0.696.png) |
+|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000158_000019_leftImg8bit_src.png)|![](https://github.com/pooruss/ICNet-paddle/raw/master/demo/munster_000158_000019_leftImg8bit_mIoU_0.692.png) |
 |- All the input images comes from the validation dataset of the Cityscaps, you can switch to the `demo/` directory to check more demo results.||
 
 # Usage

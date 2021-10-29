@@ -79,15 +79,12 @@ def batch_pix_accuracy(output, target):
     # inputs are numpy array, output 4D, target 3D
     predict = paddle.argmax(output.astype('long'), 1) + 1
     target = target.astype('long') + 1
-    pixel_labeled = paddle.sum(target)
+    pixel_labeled = paddle.sum(target > 0).item()
     # try:
-    pixel_labeled = sum_count(target > 0)
-    # try:
-    #     pixel_correct = sum_count(paddle.logical_and((predict == target) * (target > 0)))
+    pixel_correct = paddle.sum((predict == target) * (target > 0)).item()
     # except:
     #     print("predict size: {}, target size: {}, ".format(predict.shape, target.shape))
     # assert pixel_correct < pixel_labeled, "Correct area should be smaller than Labeled"
-    pixel_correct = sum_count(paddle.logical_and((predict == target),(target > 0)))
     return pixel_correct, pixel_labeled
 
 
@@ -188,11 +185,11 @@ if __name__ == '__main__':
     model.eval()
     fake_data = np.load('../models/fake_data.npy', allow_pickle=True)
     fake_label = np.load('../models/fake_label.npy', allow_pickle=True)
-
+    print(fake_label)
     input = paddle.to_tensor(fake_data)
     label = paddle.to_tensor(fake_label)
     outputs = model(input)
-    metric = SegmentationMetric(3)
+    metric = SegmentationMetric(19)
     metric.update(outputs[0], label)
     pixAcc, mIoU = metric.get()
     print(pixAcc)

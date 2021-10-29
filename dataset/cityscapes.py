@@ -21,6 +21,8 @@ class CityscapesDataset(SegmentationDataset):
     """
     input_transform = transforms.Compose([
         transforms.ToTensor(),
+        transforms.RandomHorizontalFlip,
+        transforms.RandomRotation()
         transforms.Normalize([.485, .456, .406], [.229, .224, .225])])
 
     def __init__(self, root = './datasets/Cityscapes', split='train', base_size=1024, crop_size=720, mode=None, transform=input_transform):
