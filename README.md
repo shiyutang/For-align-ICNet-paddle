@@ -69,7 +69,7 @@ test:
 Then, download the model from:
 
 - [mIoU66.7%-paddle](https://pan.baidu.com/s/1LeS1tktin9Hwu0a3OpkabQ) : code is uqcd
-- [mIoU70.1%-paddle](https://pan.baidu.com/s/1eDnEPK5ZYBYLchAOI-6Ovg) : code is 58kq
+- [mIoU69.6%-paddle](https://pan.baidu.com/s/1eDnEPK5ZYBYLchAOI-6Ovg) : code is 58kq
 
 and put the .pdparams file in  `ckpt/`.
 
