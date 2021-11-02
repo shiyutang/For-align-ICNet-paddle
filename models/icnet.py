@@ -165,8 +165,7 @@ class CascadeFeatureFusion(nn.Layer):
 #         loss_list.append(loss)
 #         lr_list1.append(optimizer1.get_lr())
 #         print(optimizer1._learning_rate())
-
-    return loss_list, lr_list1
+#    return loss_list, lr_list1
 
 if __name__ == '__main__':
     import paddle
