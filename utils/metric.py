@@ -35,6 +35,8 @@ class SegmentationMetric(object):
             # if self.total_inter.device != inter.device:
             #     self.total_inter = self.total_inter.to(inter.device)
             #     self.total_union = self.total_union.to(union.device)
+            # self.total_inter = self.total_inter.cpu()
+            # self.total_union = self.total_union.cpu()
             self.total_inter += inter
             self.total_union += union
 
@@ -43,7 +45,7 @@ class SegmentationMetric(object):
         elif isinstance(preds, (list, tuple)):
             for (pred, label) in zip(preds, labels):
                 evaluate_worker(self, pred, label)
-        
+
     def get(self):
         """Gets the current evaluation result.
 
@@ -65,19 +67,19 @@ class SegmentationMetric(object):
         self.total_label = 0
 
 
-# paddle version
+# pytorch version
 def batch_pix_accuracy(output, target):
     """PixAcc"""
     # inputs are numpy array, output 4D, target 3D
     predict = paddle.argmax(output.astype('long'), 1) + 1
     target = target.astype('long') + 1
-    pixel_labeled = sum_count(target > 0)
     # try:
-    #     pixel_correct = sum_count(paddle.logical_and((predict == target) * (target > 0)))
-    # except:
-    #     print("predict size: {}, target size: {}, ".format(predict.shape, target.shape))
-    # assert pixel_correct < pixel_labeled, "Correct area should be smaller than Labeled"
-    pixel_correct = sum_count(paddle.logical_and((predict == target),(target > 0)))
+    pixel_labeled = paddle.sum(target > 0)
+    try:
+        pixel_correct = paddle.sum((predict == target) * (target > 0))
+    except:
+        print("predict size: {}, target size: {}, ".format(predict.size(), target.size()))
+    assert pixel_correct <= pixel_labeled, "Correct area should be smaller than Labeled"
     return pixel_correct, pixel_labeled
     
 
@@ -94,9 +96,9 @@ def batch_intersection_union(output, target, nclass):
     intersection = predict * (predict == target).astype('float32')
     # areas of intersection and union
     # element 0 in intersection occur the main difference from np.bincount. set boundary to -1 is necessary.
-    area_inter = paddle.histogram(intersection, bins=nbins, min=mini, max=maxi)
-    area_pred = paddle.histogram(predict, bins=nbins, min=mini, max=maxi)
-    area_lab = paddle.histogram(target, bins=nbins, min=mini, max=maxi)
+    area_inter = paddle.histogram(intersection.cpu(), bins=nbins, min=mini, max=maxi)
+    area_pred = paddle.histogram(predict.cpu(), bins=nbins, min=mini, max=maxi)
+    area_lab = paddle.histogram(target.cpu(), bins=nbins, min=mini, max=maxi)
     area_union = area_pred + area_lab - area_inter
     assert paddle.sum(area_inter > area_union) == 0, "Intersection area should be smaller than Union area"
     return area_inter.astype('float32'), area_union.astype('float32')
