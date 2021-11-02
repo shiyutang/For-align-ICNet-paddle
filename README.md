@@ -19,8 +19,8 @@ Python 3.7 or later with the following `pip3 install -r requirements.txt`:
 |    Method     | Pretrained model |  mIoU(%)  |    GPU     | Time(train) |
 | :-----------: | :--------------: | :-------: | :--------: | :---------: |
 | ICNet(paper)  |  PSPNet50-half   |   67.7%   |   TitanX   |    80+h     |
-| ICNet(paddle) |     Resnet50     |   66.7%   | Tesla V100 |     24h     |
-| ICNet(paddle) |   Resnet50-v1s   | **70.1%** | Tesla V100 |   **20h**   |
+| ICNet(paddle) |     [Resnet50-paddle](https://pan.baidu.com/s/1kAvCAghQh01VF32o2EMgTQ)4hrm     |   66.7%   | Tesla V100 |     24h     |
+| ICNet(paddle) |   [Resnet50-v1s-paddle](https://pan.baidu.com/s/1k7Swsu1QzV4OllKp8IAPDw)4ug1   | **70.1%** | Tesla V100 |   **20h**   |
 
 - The evaluating log is in `log/icnet_resnet50_evaluate_log.txt` .
 
