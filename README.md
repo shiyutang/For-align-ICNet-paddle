@@ -21,7 +21,7 @@ Python 3.7 or later with the following `pip3 install -r requirements.txt`:
 | :-----------: | :--------------: | :-------: | :--------: | :---------: |
 | ICNet(paper)  |  PSPNet50-half   |   67.7%   |   TitanX   |    80+h     |
 | ICNet(paddle) |     [Resnet50-paddle](https://pan.baidu.com/s/1kAvCAghQh01VF32o2EMgTQ)(4hrm)     |   66.7%   | Tesla V100 |     24h     |
-| ICNet(paddle) |   [Resnet50-v1s-paddle](https://pan.baidu.com/s/1k7Swsu1QzV4OllKp8IAPDw)(4ug1)   | **70.1%** | Tesla V100 |   **20h**   |
+| ICNet(paddle) |   [Resnet50-v1s-paddle](https://pan.baidu.com/s/1k7Swsu1QzV4OllKp8IAPDw)(4ug1)   | **69.6%** | Tesla V100 |   **20h**   |
 
 - The evaluating log is in `log/icnet_resnet50_evaluate_log.txt` .
 
@@ -99,9 +99,9 @@ The structure of ICNet is mainly composed of `sub4`, `sub2`, `sub1` and `head`:
 
 Data preprocessing： set the `crop_size` as close as possible to the input size of prediction phase. Here are some experiments based on [liminn-ICNet-pytorch](https://github.com/liminn/ICNet-pytorch) :
 
-- `base_size` to **520**, it means resize the shorter side of image between 520x0.5 and 520x2, and set the `crop size` to **480**, it means randomly crop 480x480 patch to train. The final best mIoU is **65.3%**. ( Resnet50 )
+- `base_size` to **520**, it means resize the shorter side of image between 520x0.5 and 520x2, and set the `crop size` to **480**, it means randomly crop 480x480 patch to train. The final best mIoU is **66.3%**. ( Resnet50 )
 - `base_size` to **1024**, it means resize the shorter side of image between 1024x0.5 and 1024x2, and set the `crop_size` to **960**, it means randomly crop 960x960 patch to train. The final best mIoU is **66.7%**. ( Resnet50 )
-- `base_size` to **1024**, it means resize the shorter side of image between 1024x0.5 and 1024x2, and set the `crop_size` to **960**, it means randomly crop 960x960 patch to train. The final best mIoU is **70.1%**. ( Resnet50v1s )
+- `base_size` to **1024**, it means resize the shorter side of image between 1024x0.5 and 1024x2, and set the `crop_size` to **960**, it means randomly crop 960x960 patch to train. The final best mIoU is **69.6%**. ( Resnet50v1s )
 - Beacuse the target dataset is Cityscapes, the image size is 2048x1024, so a large `crop_size`( 960x960 ) is better. It is believed that larger `crop_size` will bring higher mIoU, but large `crop_size` ( such as 1024x1024 ) will result in a smaller batch size and is very time-consuming. 
 - set the learning rate of `sub4` to orginal initial learning rate(**0.01**), because it has backbone pretrained weights.
 - set the learning rate of `sub1` and `head` to 10 times initial learning rate(**0.1**), because there are no pretrained weights for them.
