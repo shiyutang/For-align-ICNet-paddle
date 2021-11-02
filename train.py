@@ -13,7 +13,7 @@ class Trainer(object):
     def __init__(self, cfg):
         self.cfg = cfg
         # self.device = 'gpu'
-        self.dataparallel = True
+        self.dataparallel = False
 
         # dataset and dataloader
         train_dataset = CityscapesDataset(root=cfg["train"]["cityscapes_root"],
