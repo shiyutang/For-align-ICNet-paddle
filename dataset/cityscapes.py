@@ -168,8 +168,7 @@ def _get_city_pairs(folder, split='train'):
                         img_paths.append(imgpath)
                         mask_paths.append(maskpath)
                     else:
-                        continue
-                        # print('cannot find the mask or image:', imgpath, maskpath)
+                        print('cannot find the mask or image:', imgpath, maskpath)
         print('Found {} images in the folder {}'.format(len(img_paths), img_folder))
         return img_paths, mask_paths
 

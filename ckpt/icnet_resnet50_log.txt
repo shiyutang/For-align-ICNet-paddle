@@ -1,2 +1,0 @@
-2021-10-28 12:02:33,035 semantic_segmentation INFO: Using 1 GPUs
-2021-10-28 12:02:33,035 semantic_segmentation INFO: {'model': {'name': 'icnet', 'backbone': 'resnet50', 'base_size': 1024, 'crop_size': 960}, 'optimizer': {'init_lr': 0.01, 'momentum': 0.9, 'weight_decay': 0.0001}, 'train': {'specific_gpu_num': '1', 'train_batch_size': 1, 'valid_batch_size': 1, 'cityscapes_root': '../cityscapes', 'epochs': 200, 'log_iter': 10, 'val_epoch': 1, 'ckpt_dir': './ckpt/'}, 'test': {'ckpt_path': './ckpt/icnet_resnet50_197_0.710_best_model.pdparams'}}

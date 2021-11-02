@@ -9,14 +9,11 @@ from models import ICNet
 from utils import ICNetLoss, SegmentationMetric, SetupLogger
 
 
-# import paddle.distributed as dist
-
-
 class Trainer(object):
     def __init__(self, cfg):
         self.cfg = cfg
         # self.device = 'gpu'
-        self.dataparallel = False
+        self.dataparallel = True
 
         # dataset and dataloader
         train_dataset = CityscapesDataset(root=cfg["train"]["cityscapes_root"],
@@ -42,38 +39,33 @@ class Trainer(object):
         self.max_iters = cfg["train"]["epochs"] * self.iters_per_epoch
 
         # create network
-        self.model = ICNet(nclass=train_dataset.NUM_CLASS, backbone='resnet50')
+        self.model = ICNet(nclass=train_dataset.NUM_CLASS, backbone=cfg["model"]["backbone"])
+
         # create criterion
         self.criterion = ICNetLoss(ignore_index=train_dataset.IGNORE_INDEX)
+
         # optimizer, for model just includes pretrained, head and auxlayer
         params_list = list()
-
-        if hasattr(self.model, 'pretrained'):
-            params_list.append({'params': self.model.pretrained.parameters(), 'lr': cfg["optimizer"]["init_lr"]})
-            print('lr*1')
-        if hasattr(self.model, 'exclusive'):
-            for module in self.model.exclusive:
-                params_list.append(
-                    {'params': getattr(self.model, module).parameters(), 'lr': cfg["optimizer"]["init_lr"] * 10})
-                print("lr*10")
-
-        # params_list = self.model.pretrained.parameters().append({'learning_rate': cfg["optimizer"]["init_lr"]})
         self.lr_scheduler = paddle.optimizer.lr.PolynomialDecay(
             learning_rate=cfg["optimizer"]["init_lr"],
             decay_steps=self.max_iters,
             end_lr=0.0,
             power=0.9,
-            cycle=True
+            cycle=False
         )
-
+        if hasattr(self.model, 'pretrained'):
+            params_list.append({'params': self.model.pretrained.parameters(), 'learning_rate': 1.0})
+            print('lr*1')
+        if hasattr(self.model, 'exclusive'):
+            for module in self.model.exclusive:
+                print(getattr(self.model, module).parameters())
+                params_list.append({'params': getattr(self.model, module).parameters(), 'learning_rate': 10.0})
+                print("lr*10")
         self.optimizer = paddle.optimizer.Momentum(parameters=params_list,
-                                                   learning_rate=self.lr_scheduler,
-                                                   momentum=cfg["optimizer"]["momentum"],
-                                                   weight_decay=cfg["optimizer"]["weight_decay"])
+                                                    learning_rate=self.lr_scheduler,
+                                                    momentum=cfg["optimizer"]["momentum"],
+                                                    weight_decay=cfg["optimizer"]["weight_decay"])
 
-        # dist.init_parallel_env()
-        if (self.dataparallel):
-            self.model = paddle.DataParallel(self.model)
 
         # evaluation metrics
         self.metric = SegmentationMetric(train_dataset.NUM_CLASS)
@@ -86,7 +78,6 @@ class Trainer(object):
         self.current_iteration = 0
 
     def train(self):
-        # print(self.model.sub_layer)
         epochs, max_iters = self.epochs, self.max_iters
         log_per_iters = self.cfg["train"]["log_iter"]
         val_per_iters = self.cfg["train"]["val_epoch"] * self.iters_per_epoch
@@ -104,7 +95,6 @@ class Trainer(object):
             self.metric.reset()
             for i, (images, targets, _) in enumerate(self.train_dataloader()):
                 self.current_iteration += 1
-                self.lr_scheduler.step()
                 outputs = self.model(images)
                 loss = self.criterion(outputs, targets)
                 self.metric.update(outputs[0], targets)
@@ -116,6 +106,7 @@ class Trainer(object):
                 self.optimizer.clear_grad()
                 loss.backward()
                 self.optimizer.step()
+                self.lr_scheduler.step()
 
                 eta_seconds = ((time.time() - start_time) / self.current_iteration) * (
                             max_iters - self.current_iteration)
@@ -155,10 +146,7 @@ class Trainer(object):
     def validation(self):
         is_best = False
         self.metric.reset()
-        if self.dataparallel:
-            model = self.model.module
-        else:
-            model = self.model
+        model = self.model
         model.eval()
         lsit_pixAcc = []
         list_mIoU = []
@@ -208,7 +196,10 @@ if __name__ == '__main__':
     # Set config file
     config_path = "./configs/icnet.yaml"
     with open(config_path, "r") as yaml_file:
-        cfg = yaml.full_load(yaml_file.read())
+        cfg = yaml.load(yaml_file.read())
+        print(cfg)
+        print(cfg["model"]["backbone"])
+        print(cfg["train"]["specific_gpu_num"])
 
     # Use specific GPU
     os.environ["CUDA_VISIBLE_DEVICES"] = str(cfg["train"]["specific_gpu_num"])

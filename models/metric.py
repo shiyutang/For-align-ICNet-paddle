@@ -7,11 +7,6 @@ __all__ = ['SegmentationMetric', 'batch_pix_accuracy', 'batch_intersection_union
            'pixelAccuracy', 'intersectionAndUnion', 'hist_info', 'compute_score']
 
 
-def sum_count(bool_tensor):
-    # print(bool_tensor.dtype)
-    assert bool_tensor.dtype == paddle.bool
-    return paddle.fluid.layers.where(bool_tensor).shape[0]
-
 
 class SegmentationMetric(object):
     """Computes pixAcc and mIoU metric scores
@@ -40,9 +35,6 @@ class SegmentationMetric(object):
 
             self.total_correct += correct
             self.total_label += labeled
-            # if self.total_inter.device != inter.device:
-            #     self.total_inter = self.total_inter.to(inter.device)
-            #     self.total_union = self.total_union.to(union.device)
             self.total_inter += inter
             self.total_union += union
 
@@ -73,7 +65,7 @@ class SegmentationMetric(object):
         self.total_label = 0
 
 
-# pytorch version
+# paddle version
 def batch_pix_accuracy(output, target):
     """PixAcc"""
     # inputs are numpy array, output 4D, target 3D
@@ -101,9 +93,9 @@ def batch_intersection_union(output, target, nclass):
     intersection = predict * (predict == target).astype('float32')
     # areas of intersection and union
     # element 0 in intersection occur the main difference from np.bincount. set boundary to -1 is necessary.
-    area_inter = paddle.histogram(intersection.cpu(), bins=nbins, min=mini, max=maxi)
-    area_pred = paddle.histogram(predict.cpu(), bins=nbins, min=mini, max=maxi)
-    area_lab = paddle.histogram(target.cpu(), bins=nbins, min=mini, max=maxi)
+    area_inter = paddle.histogram(intersection, bins=nbins, min=mini, max=maxi)
+    area_pred = paddle.histogram(predict, bins=nbins, min=mini, max=maxi)
+    area_lab = paddle.histogram(target, bins=nbins, min=mini, max=maxi)
     area_union = area_pred + area_lab - area_inter
     assert paddle.sum(area_inter > area_union) == 0, "Intersection area should be smaller than Union area"
     return area_inter.astype('float32'), area_union.astype('float32')
@@ -177,24 +169,24 @@ if __name__ == '__main__':
     import paddle
     from reprod_log import ReprodLogger
 
-    # Align
-    reprod_logger = ReprodLogger()
-    model = ICNet()
-    model_file = 'paddle_from_torch.pdparams'
-    model.load_dict((paddle.load(model_file)))
-    model.eval()
-    fake_data = np.load('../models/fake_data.npy', allow_pickle=True)
-    fake_label = np.load('../models/fake_label.npy', allow_pickle=True)
-    print(fake_label)
-    input = paddle.to_tensor(fake_data)
-    label = paddle.to_tensor(fake_label)
-    outputs = model(input)
-    metric = SegmentationMetric(19)
-    metric.update(outputs[0], label)
-    pixAcc, mIoU = metric.get()
-    print(pixAcc)
-    print(mIoU)
-
-    print(np.array([mIoU.item()]))
-    reprod_logger.add("mIoU", np.array([mIoU.item()]))
-    reprod_logger.save("metric_paddle.npy")
+    # # Metric Align
+    # reprod_logger = ReprodLogger()
+    # model = ICNet()
+    # model_file = 'paddle_from_torch.pdparams'
+    # model.load_dict((paddle.load(model_file)))
+    # model.eval()
+    # fake_data = np.load('../models/fake_data.npy', allow_pickle=True)
+    # fake_label = np.load('../models/fake_label.npy', allow_pickle=True)
+    # print(fake_label)
+    # input = paddle.to_tensor(fake_data)
+    # label = paddle.to_tensor(fake_label)
+    # outputs = model(input)
+    # metric = SegmentationMetric(19)
+    # metric.update(outputs[0], label)
+    # pixAcc, mIoU = metric.get()
+    # print(pixAcc)
+    # print(mIoU)
+    #
+    # print(np.array([mIoU.item()]))
+    # reprod_logger.add("mIoU", np.array([mIoU.item()]))
+    # reprod_logger.save("metric_paddle.npy")

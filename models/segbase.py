@@ -1,6 +1,6 @@
 """Base Model for Semantic Segmentation"""
 import paddle.nn as nn
-from base_models.resnetv1b import resnet50_v1b
+from .base_models.resnetv1b import resnet50_v1b, resnet50_v1s
 
 __all__ = ['SegBaseModel']
 
@@ -10,16 +10,17 @@ class SegBaseModel(nn.Layer):
     Parameters
     ----------
     backbone : string
-        Pre-trained dilated backbone network type (default:'resnet50'; 'resnet50',
-        'resnet101' or 'resnet152').
+        Pre-trained dilated backbone network type (default:'resnet50v1s'; 'resnet50').
     """
 
-    def __init__(self, nclass, backbone='resnet50', pretrained_base=True, **kwargs):
+    def __init__(self, nclass, backbone='resnet50v1s', pretrained_base=True, **kwargs):
         super(SegBaseModel, self).__init__()
         dilated = True
         self.nclass = nclass
         if backbone == 'resnet50':
             self.pretrained = resnet50_v1b(pretrained=pretrained_base, dilated=dilated, **kwargs)
+        elif backbone == 'resnet50v1s':
+            self.pretrained = resnet50_v1s(pretrained=pretrained_base, dilated=dilated, **kwargs)
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
 

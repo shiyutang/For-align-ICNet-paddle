@@ -2,9 +2,8 @@
 import paddle.nn as nn
 import paddle.nn.functional as F
 import paddle
-from segbase import SegBaseModel
-from utils import ICNetLoss, SegmentationMetric, SetupLogger
-from utils_lr import MetricLogger, SmoothedValue
+from .segbase import SegBaseModel
+from utils import ICNetLoss, SegmentationMetric, SetupLogger, MetricLogger, SmoothedValue
 
 __all__ = ['ICNet']
 
@@ -12,7 +11,7 @@ __all__ = ['ICNet']
 class ICNet(SegBaseModel):
     """Image Cascade Network"""
 
-    def __init__(self, nclass=19, backbone='resnet50', pretrained_base=True):
+    def __init__(self, nclass=19, backbone='resnet50v1s', pretrained_base=True):
         super(ICNet, self).__init__(nclass, backbone, pretrained_base=pretrained_base)
         self.conv_sub1 = nn.Sequential(
             _ConvBNReLU(3, 32, 3, 2),
@@ -133,10 +132,8 @@ class CascadeFeatureFusion(nn.Layer):
 
 def train_some_iters(model,
                      lr_scheduler1,
-                     lr_scheduler2,
                      criterion,
                      optimizer1,
-                    optimizer2,
                      fake_data,
                      fake_label,
                      max_iter=3):
@@ -152,7 +149,6 @@ def train_some_iters(model,
 
     loss_list = []
     lr_list1 = []
-    lr_list2 = []
     for idx in range(max_iter):
         image = paddle.to_tensor(fake_data)
         target = paddle.to_tensor(fake_label)
@@ -160,22 +156,15 @@ def train_some_iters(model,
         loss = criterion(output, target)
 
         optimizer1.clear_grad()
-        optimizer2.clear_grad()
         loss.backward()
         optimizer1.step()
-        optimizer2.step()
         lr_scheduler1.step()
-        lr_scheduler2.step()
 
-        # print(loss)
         loss_list.append(loss)
-        # lr_list.append(optimizer.get_lr())
         lr_list1.append(optimizer1.get_lr())
         print(optimizer1._learning_rate())
-        lr_list2.append(optimizer2.get_lr())
-        print(optimizer2._learning_rate())
 
-    return loss_list, lr_list1, lr_list2
+    return loss_list, lr_list1
 
 if __name__ == '__main__':
     import paddle
@@ -187,16 +176,17 @@ if __name__ == '__main__':
 
     #  To pdparams
 
-    # Align
+    # # Align
+    #
+    # model_file = '../paddle_from_torch.pdparams'
+    # model.load_dict(paddle.load(model_file))
+    # model.eval()
+    # fake_data = np.load('fake_data.npy', allow_pickle=True)
+    # fake_label = np.load('fake_label.npy', allow_pickle=True)
+    # input = paddle.to_tensor(fake_data)
+    # label = paddle.to_tensor(fake_label)
+    # criterion = ICNetLoss(ignore_index=-1)
 
-    model_file = 'paddle_from_torch.pdparams'
-    model.load_dict(paddle.load(model_file))
-    model.eval()
-    fake_data = np.load('fake_data.npy', allow_pickle=True)
-    fake_label = np.load('fake_label.npy', allow_pickle=True)
-    input = paddle.to_tensor(fake_data)
-    label = paddle.to_tensor(fake_label)
-    criterion = ICNetLoss(ignore_index=-1)
 
     # # forward
     # output = model(input)
@@ -204,61 +194,59 @@ if __name__ == '__main__':
     #     reprod_logger.add("forward_{}".format(i), output[i].numpy())
     # reprod_logger.save("forward_paddle.npy")
 
+
     # loss
     # loss = criterion(output, label)
     # print(loss)
     # reprod_logger.add("loss", loss.cpu().detach().numpy())
     # reprod_logger.save("loss_paddle.npy")
 
-    # backward
-    max_iters = 5
-    params_list1 = list()
-    params_list2 = list()
-    lr_scheduler1 = paddle.optimizer.lr.PolynomialDecay(
-        learning_rate=0.001,
-        decay_steps=30000,
-        end_lr=0.0,
-        power=0.9,
-        cycle=False
-    )
-    lr_scheduler2 = paddle.optimizer.lr.PolynomialDecay(
-        learning_rate=0.001 * 10,
-        decay_steps=30000,
-        end_lr=0.0,
-        power=0.9,
-        cycle=False
-    )
-    if hasattr(model, 'pretrained'):
-        params_list1.append(
-            {'params': model.pretrained.parameters()})
-        print('lr*1')
-    if hasattr(model, 'exclusive'):
-        for module in model.exclusive:
-            params_list2.append(
-                {'params': getattr(model, module).parameters()})
-            print("lr*10")
-    optimizer1 = paddle.optimizer.Momentum(parameters=params_list1,
-                                                learning_rate=lr_scheduler1,
-                                                momentum=0.9,
-                                                weight_decay=0.0001)
-    optimizer2 = paddle.optimizer.Momentum(parameters=params_list2,
-                                                learning_rate=lr_scheduler2,
-                                                momentum=0.9,
-                                                weight_decay=0.0001)
-    loss_list, lr_list1, lr_list2 = train_some_iters(model,
-                      lr_scheduler1,
-                    lr_scheduler2,
-                     criterion,
-                     optimizer1,
-                     optimizer2,
-                     fake_data,
-                     fake_label,
-                     max_iter=max_iters)
+
+    # # backward
+    # max_iters = 5
+    # params_list1 = list()
+    # params_list2 = list()
+    # lr_scheduler1 = paddle.optimizer.lr.PolynomialDecay(
+    #     learning_rate=0.001,
+    #     decay_steps=30000,
+    #     end_lr=0.0,
+    #     power=0.9,
+    #     cycle=False
+    # )
+    # lr_scheduler2 = paddle.optimizer.lr.PolynomialDecay(
+    #     learning_rate=0.001 * 10,
+    #     decay_steps=30000,
+    #     end_lr=0.0,
+    #     power=0.9,
+    #     cycle=False
+    # )
+    # if hasattr(model, 'pretrained'):
+    #     params_list1.append(
+    #         {'params': model.pretrained.parameters(),'learning_rate':1.0})
+    #     print('lr*1')
+    # if hasattr(model, 'exclusive'):
+    #     for module in model.exclusive:
+    #         params_list1.append(
+    #             {'params': getattr(model, module).parameters(),'learning_rate':10.0})
+    #         print("lr*10")
+    # optimizer1 = paddle.optimizer.Momentum(parameters=params_list1,
+    #                                             learning_rate=lr_scheduler1,
+    #                                             momentum=0.9,
+    #                                             weight_decay=0.0001)
+    # loss_list, lr_list1 = train_some_iters(model,
+    #                   lr_scheduler1,
+    #                  criterion,
+    #                  optimizer1,
+    #                  fake_data,
+    #                  fake_label,
+    #                  max_iter=max_iters)
+
+
 
     # # log
 
-    for i in range(max_iters):
-        print(loss_list[i].item())
+    # for i in range(max_iters):
+    #     print(loss_list[i].item())
     # for i in range(max_iters):
     #     reprod_logger.add("loss_backward_{}".format(i), np.array(loss_list[i].item()))
     # reprod_logger.save("loss_backward_paddle.npy")
@@ -267,6 +255,6 @@ if __name__ == '__main__':
     #     reprod_logger.add("lr1_backward_{}".format(i), np.array(lr_list1[i]))
     # reprod_logger.save("lr1_backward_paddle.npy")
 
-    for i in range(max_iters):
-        reprod_logger.add("lr2_backward_{}".format(i), np.array(lr_list2[i]))
-    reprod_logger.save("lr2_backward_paddle.npy")
+    # for i in range(max_iters):
+    #     reprod_logger.add("lr2_backward_{}".format(i), np.array(lr_list2[i]))
+    # reprod_logger.save("lr2_backward_paddle.npy")

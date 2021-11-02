@@ -39,9 +39,9 @@ if __name__ == "__main__":
     # diff_helper.report(
     #     diff_method="mean", diff_threshold=1e-5, path="./loss_backward_diff.txt")
 
-    # metric
-    metricd = diff_helper.load_info("./metric/metric_paddle.npy")
-    metrict = diff_helper.load_info("./metric/metric_torch.npy")
-    diff_helper.compare_info(metricd, metrict)
-    diff_helper.report(
-        diff_method="mean", diff_threshold=1e-5, path="./metric_diff.txt")
+    # # metric
+    # metricd = diff_helper.load_info("./metric/metric_paddle.npy")
+    # metrict = diff_helper.load_info("./metric/metric_torch.npy")
+    # diff_helper.compare_info(metricd, metrict)
+    # diff_helper.report(
+    #     diff_method="mean", diff_threshold=1e-5, path="./metric_diff.txt")
