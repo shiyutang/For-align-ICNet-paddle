@@ -9,7 +9,7 @@ import numpy as np
 from PIL import Image
 from paddle.vision import transforms
 from models import ICNet
-from utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger, get_color_pallete
+from utils import ICNetLoss, SegmentationMetric, SetupLogger, get_color_pallete
 
 class Evaluator(object):
     def __init__(self, cfg):
