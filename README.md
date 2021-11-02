@@ -12,7 +12,6 @@ Python 3.7 or later with the following `pip3 install -r requirements.txt`:
 # Align
 - All the logs and related files can be found in the `align/`, including **forward, metric, loss and backward**. To see the diff logs directly, in the `align/diff_txt`.
 - Run `models/icnet.py` to check the all aligning steps and generate relevant files. Then put the .npy files in the `align/forward`、`align/backward`、`align/metric` respectively, and run `align/check_log_diff.py` .
-- 
 
 # Performance  
 - Base on Cityscapes dataset, only train on trainning set, and test on validation set, using only one Tesla V100 card on [aistudio platform](https://aistudio.baidu.com/aistudio/index), and input size of the test phase is 2048x1024x3.
