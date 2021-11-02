@@ -3,7 +3,8 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 import paddle
 from .segbase import SegBaseModel
-from utils import ICNetLoss, SegmentationMetric, SetupLogger, MetricLogger, SmoothedValue
+from utils import ICNetLoss, SegmentationMetric, SetupLogger
+# from utils import MetricLogger, SmoothedValue # for align, torch included
 
 __all__ = ['ICNet']
 
@@ -130,39 +131,40 @@ class CascadeFeatureFusion(nn.Layer):
         return x, x_low_cls
 
 
-def train_some_iters(model,
-                     lr_scheduler1,
-                     criterion,
-                     optimizer1,
-                     fake_data,
-                     fake_label,
-                     max_iter=3):
-    # needed to avoid network randomness
-    model.eval()
-    metric_logger = MetricLogger(delimiter="  ")
-    metric_logger.add_meter(
-        'lr', SmoothedValue(
-            window_size=1, fmt='{value}'))
-    metric_logger.add_meter(
-        'img/s', SmoothedValue(
-            window_size=10, fmt='{value}'))
-
-    loss_list = []
-    lr_list1 = []
-    for idx in range(max_iter):
-        image = paddle.to_tensor(fake_data)
-        target = paddle.to_tensor(fake_label)
-        output = model(image)
-        loss = criterion(output, target)
-
-        optimizer1.clear_grad()
-        loss.backward()
-        optimizer1.step()
-        lr_scheduler1.step()
-
-        loss_list.append(loss)
-        lr_list1.append(optimizer1.get_lr())
-        print(optimizer1._learning_rate())
+# for align, torch included
+# def train_some_iters(model,
+#                      lr_scheduler1,
+#                      criterion,
+#                      optimizer1,
+#                      fake_data,
+#                      fake_label,
+#                      max_iter=3):
+#     # needed to avoid network randomness
+#     model.eval()
+#     metric_logger = MetricLogger(delimiter="  ")
+#     metric_logger.add_meter(
+#         'lr', SmoothedValue(
+#             window_size=1, fmt='{value}'))
+#     metric_logger.add_meter(
+#         'img/s', SmoothedValue(
+#             window_size=10, fmt='{value}'))
+#
+#     loss_list = []
+#     lr_list1 = []
+#     for idx in range(max_iter):
+#         image = paddle.to_tensor(fake_data)
+#         target = paddle.to_tensor(fake_label)
+#         output = model(image)
+#         loss = criterion(output, target)
+#
+#         optimizer1.clear_grad()
+#         loss.backward()
+#         optimizer1.step()
+#         lr_scheduler1.step()
+#
+#         loss_list.append(loss)
+#         lr_list1.append(optimizer1.get_lr())
+#         print(optimizer1._learning_rate())
 
     return loss_list, lr_list1
 
