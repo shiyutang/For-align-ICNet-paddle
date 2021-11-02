@@ -20,7 +20,7 @@ class Evaluator(object):
         self.image_paths, self.mask_paths = _get_city_pairs(cfg["train"]["cityscapes_root"], "val")
 
         # create network
-        self.model = ICNet(nclass = 19, backbone='resnet50')
+        self.model = ICNet(nclass = 19, backbone=cfg["model"]["backbone"])
         
         # load ckpt
         pretrained_net = paddle.load(cfg["test"]["ckpt_path"])
