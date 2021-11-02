@@ -20,12 +20,16 @@ class CityscapesDataset(SegmentationDataset):
             [0, 255] to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0].
     """
     input_transform = transforms.Compose([
+        # transforms.ColorJitter(brightness=0.7,contrast=0.7,saturation=0.7),
         transforms.ToTensor(),
-        transforms.RandomHorizontalFlip,
-        transforms.RandomRotation()
+        transforms.Normalize([.485, .456, .406], [.229, .224, .225])])
+    val_transform = transforms.Compose([
+        transforms.ToTensor(),
+        # transforms.RandomHorizontalFlip(0.5),
+        # transforms.RandomRotation(90),
         transforms.Normalize([.485, .456, .406], [.229, .224, .225])])
 
-    def __init__(self, root = './datasets/Cityscapes', split='train', base_size=1024, crop_size=720, mode=None, transform=input_transform):
+    def __init__(self, root = './datasets/Cityscapes', split='train', base_size=1024, crop_size=960, mode=None, transform=input_transform):
         """
         Parameters
             root : string
@@ -38,6 +42,8 @@ class CityscapesDataset(SegmentationDataset):
         super(CityscapesDataset, self).__init__(root, split, mode, transform,base_size, crop_size)
         assert os.path.exists(self.root), "Error: data root path is wrong!"
         self.images, self.mask_paths = _get_city_pairs(self.root, self.split)
+        self.transforms1 = transforms.Compose([ transforms.ToTensor(),
+                                            transforms.Normalize([.485, .456, .406], [.229, .224, .225])])
         assert (len(self.images) == len(self.mask_paths))
         if len(self.images) == 0:
             raise RuntimeError("Found 0 images in subfolders of:" + root + "\n")
@@ -75,14 +81,15 @@ class CityscapesDataset(SegmentationDataset):
         # synchrosized transform
         if self.mode == 'train':
             img, mask = self._sync_transform(img, mask)
+            img = self.transform(img)
         elif self.mode == 'val':
             img, mask = self._val_sync_transform(img, mask)
         else:
             assert self.mode == 'testval'
             img, mask = self._img_transform(img), self._mask_transform(mask)
         # general normalize and toTensor
-        if self.transform is not None:
-            img = self.transform(img)
+        if (self.transforms1 is not None) and (self.mode == 'val'):
+            img = self.transforms1(img)
         return img, mask, os.path.basename(self.images[index])
         
     # 覆盖了基类的_mask_transform方法
