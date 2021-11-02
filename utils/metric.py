@@ -1,7 +1,6 @@
 """Evaluation Metrics for Semantic Segmentation"""
 import paddle
 import numpy as np
-from .sum_count import sum_count
 __all__ = ['SegmentationMetric', 'batch_pix_accuracy', 'batch_intersection_union',
            'pixelAccuracy', 'intersectionAndUnion', 'hist_info', 'compute_score']
 
@@ -95,9 +94,9 @@ def batch_intersection_union(output, target, nclass):
     intersection = predict * (predict == target).astype('float32')
     # areas of intersection and union
     # element 0 in intersection occur the main difference from np.bincount. set boundary to -1 is necessary.
-    area_inter = paddle.histogram(intersection.cpu(), bins=nbins, min=mini, max=maxi)
-    area_pred = paddle.histogram(predict.cpu(), bins=nbins, min=mini, max=maxi)
-    area_lab = paddle.histogram(target.cpu(), bins=nbins, min=mini, max=maxi)
+    area_inter = paddle.histogram(intersection, bins=nbins, min=mini, max=maxi)
+    area_pred = paddle.histogram(predict, bins=nbins, min=mini, max=maxi)
+    area_lab = paddle.histogram(target, bins=nbins, min=mini, max=maxi)
     area_union = area_pred + area_lab - area_inter
     assert paddle.sum(area_inter > area_union) == 0, "Intersection area should be smaller than Union area"
     return area_inter.astype('float32'), area_union.astype('float32')
