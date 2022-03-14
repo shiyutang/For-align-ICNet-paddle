@@ -15,7 +15,7 @@ class BasicBlockV1b(nn.Layer):
         self.conv1 = nn.Conv2D(inplanes, planes, 3, stride,
                                dilation, dilation, bias_attr=False)
         self.bn1 = norm_layer(planes)
-        self.relu = nn.ReLU(True)
+        self.relu = nn.ReLU()
         self.conv2 = nn.Conv2D(planes, planes, 3, 1, previous_dilation,
                                dilation=previous_dilation, bias_attr=False)
         self.bn2 = norm_layer(planes)#, weight_attr = self.bn_weight)
@@ -57,7 +57,7 @@ class BottleneckV1b(nn.Layer):
         self.bn2 = norm_layer(planes)
         self.conv3 = nn.Conv2D(planes, planes * self.expansion, 1, bias_attr=False)#, weight_attr=self.con2d_weight)
         self.bn3 = norm_layer(planes * self.expansion, bias_attr=None)#, weight_attr=self.bn_weight)
-        self.relu = nn.ReLU(True)
+        self.relu = nn.ReLU()
         self.downsample = downsample
         self.stride = stride
 
@@ -97,16 +97,16 @@ class ResNetV1b(nn.Layer):
             self.conv1 = nn.Sequential(
                 nn.Conv2D(3, 64, 3, 2, 1, bias_attr=False, weight_attr=self.con2d_weight),
                 norm_layer(64, bias_attr=self.bn_bias, weight_attr=self.bn_weight),
-                nn.ReLU(True),
+                nn.ReLU(),
                 nn.Conv2D(64, 64, 3, 1, 1, bias_attr=False, weight_attr=self.con2d_weight),
                 norm_layer(64, bias_attr=self.bn_bias, weight_attr=self.bn_weight),
-                nn.ReLU(True),
+                nn.ReLU(),
                 nn.Conv2D(64, 128, 3, 1, 1, bias_attr=False, weight_attr=self.con2d_weight)
             )
         else:
             self.conv1 = nn.Conv2D(3, 64, 7, 2, 3, bias_attr=False, weight_attr=self.con2d_weight)
         self.bn1 = norm_layer(self.inplanes, bias_attr=self.bn_bias, weight_attr=self.bn_weight)
-        self.relu = nn.ReLU(True)
+        self.relu = nn.ReLU()
         self.maxpool = nn.MaxPool2D(3, 2, 1)
         self.layer1 = self._make_layer(block, 64, layers[0], norm_layer=norm_layer)
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2, norm_layer=norm_layer)

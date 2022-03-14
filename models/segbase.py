@@ -13,7 +13,9 @@ class SegBaseModel(nn.Layer):
         Pre-trained dilated backbone network type (default:'resnet50v1s'; 'resnet50').
     """
 
-    def __init__(self, nclass, backbone='resnet50v1s', pretrained_base=True, **kwargs):
+    def __init__(self, nclass, backbone='resnet50', pretrained_base=False, **kwargs):
+
+        backbone='resnet50'
         super(SegBaseModel, self).__init__()
         dilated = True
         self.nclass = nclass
@@ -26,6 +28,8 @@ class SegBaseModel(nn.Layer):
 
     def base_forward(self, x):
         """forwarding pre-trained network"""
+        import pdb; pdb.set_trace()
+
         x = self.pretrained.conv1(x)
         x = self.pretrained.bn1(x)
         x = self.pretrained.relu(x)
